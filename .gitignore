@@ -1,0 +1,12 @@
+node_modules
+.idea
+.tmp
+.sass-cache
+www/lib/**
+coverage
+platforms
+plugins
+*.swp
+*.swo
+*.log
+*.DS_Store

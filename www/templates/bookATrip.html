@@ -1,0 +1,67 @@
+<div ng-controller="MapCtrl as vm" ng-controller="NotificationCtrl">
+<ion-view title="Book a trip" id="booking"  >
+  <ion-content padding="true" class="has-header" scroll="false">
+    <div>
+      <uib-progressbar class="progress-striped active" value="100" type="success" ng-if="bookingProc === true;"><i>Looking for driver...</i></uib-progressbar>
+    </div>
+    <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
+    <form id="bookATrip-form2" class="list">
+      <label class="item item-input item-stacked-label" id="bookATrip-input3">
+        <span class="input-label">Pick-up location</span>
+        <input type="text"
+               class="form-control"
+               id="pickupLocation"
+               required
+               placeholder="Enter pickup location"
+               size=80
+               places-auto-complete
+               ng-model="vm.pickupAddress"
+               component-restrictions="{country:'ee'}"
+               on-place-changed="vm.pickupPlaceChanged()"/>
+      </label>
+      <label class="item item-input item-stacked-label" id="bookATrip-input4">
+        <span class="input-label">Destination location</span>
+        <input type="text"
+               class="form-control"
+               id="destinationLocation"
+               placeholder="Enter destination location"
+               size=80
+               places-auto-complete
+               ng-model="vm.destinationAddress"
+               component-restrictions="{country:'ee'}"
+               on-place-changed="vm.destinationPlaceChanged()"/>
+      </label>
+      <button id="bookATrip-button1"  style="border-radius:20px 20px 20px 20px;" class="button button-positive  button-block" ng-click="vm.submit()">Request a taxi</button>
+    </form>
+
+
+    <div ng-show="vm.distance">
+      Distance:{{vm.distance}}
+    </div>
+
+    <div ng-show="vm.duration">
+      Average time of travel: {{vm.duration}}
+    </div>
+
+
+    <map center='current-position'
+         geo-fallback-center="[58.53, 25.33]"
+         geo-callback="vm.callbackFunc('you')"
+         data-tap-disabled="true"
+    >
+
+      <directions
+        draggable="false"
+        panel="directions-panel"
+        travel-mode="DRIVING"
+        origin="{{vm.pickupLocation}}"
+        destination="{{vm.destinationLocation}}">
+      </directions>
+
+    </map>
+
+
+  </ion-content>
+</ion-view>
+</div>
+

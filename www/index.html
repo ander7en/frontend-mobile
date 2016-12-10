@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+
+
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+
+
+    <style type="text/css">
+      .platform-ios .manual-ios-statusbar-padding{
+        padding-top:20px;
+      }
+      .manual-remove-top-padding{
+        padding-top:0px;
+      }
+      .manual-remove-top-padding .scroll{
+        padding-top:0px !important;
+      }
+      ion-list.manual-list-fullwidth div.list, .list.card.manual-card-fullwidth {
+        margin-left:-10px;
+        margin-right:-10px;
+      }
+      ion-list.manual-list-fullwidth div.list > .item, .list.card.manual-card-fullwidth > .item {
+        border-radius:0px;
+        border-left:0px;
+        border-right: 0px;
+      }
+      .show-list-numbers-and-dots ul{
+        list-style-type: disc;
+        padding-left:40px;
+      }
+      .show-list-numbers-and-dots ol{
+        list-style-type: decimal;
+        padding-left:40px;
+      }
+    </style>
+
+    <script src="https://maps.google.com/maps/api/js?key=AIzaSyBO5kyw0sfY5g76KK-OGqQHl0EwafK0Hvo&libraries=placeses,visualization,drawing,geometry,places,distance&language=en"></script>
+
+    <script src="js/ngmap/build/scripts/ng-map.js"></script>
+    <script src="js/angular/angular.js"></script>
+    <script src="js/pusher-websocket-iso/dist/web/pusher.js"></script>
+    <script src="js/angular-local-storage/dist/angular-local-storage.js"></script>
+
+
+
+    <script src="lib/jquery/dist/jquery.js"></script>
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="lib/angular-route/angular-route.js"></script>
+    <script src="lib/ngmap/build/scripts/ng-map.js"></script>
+    <script src="lib/pusher-websocket-iso/dist/web/pusher.js"></script>
+    <script src="lib/angular-local-storage/dist/angular-local-storage.js"></script>
+    <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="lib/angular-animate/angular-animate.js"></script>
+    <script src="lib/angular-touch/angular-touch.js"></script>
+    <script src="lib/angular-resource/angular-resource.js"></script>
+
+
+    <script src="js/routes.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/services/bookingservice.js"></script>
+    <script src="js/services/pusherfactory.js"></script>
+    <script src="js/notification.js"></script>
+    <script src="js/services/notificationservice.js"></script>
+    <script src="js/services/orderingservice.js"></script>
+
+    <script src="js/directives.js"></script>
+    <script src="js/services.js"></script>
+
+
+    <!-- Only required for Tab projects w/ pages in multiple tabs
+    <script src="lib/ionicuirouter/ionicUIRouter.js"></script>
+    -->
+
+  </head>
+  <body ng-app="app" animation="slide-left-right-ios7" ng-controller="NotificationCtrl">
+
+  <div>
+    <div>
+      <ion-nav-bar class="bar-stable">
+        <ion-nav-back-button></ion-nav-back-button>
+      </ion-nav-bar>
+      <ion-nav-view></ion-nav-view>
+    </div>
+  </div>
+
+  </body>
+</html>
