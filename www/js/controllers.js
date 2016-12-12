@@ -12,7 +12,7 @@ function ($scope, $stateParams) {
 
 
 /* @ngInject */
-function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingService) {
+function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingService, DriverService) {
 
   var vm = this;
   // Data
@@ -31,6 +31,7 @@ function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingSe
   vm.pickupPlaceChanged = pickupPlaceChanged;
   vm.updateRouteInfo = updateRouteInfo;
   vm.submit = submit;
+  vm.loadMarkers = loadMarkers;
   //////////
   init();
 
@@ -46,14 +47,51 @@ function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingSe
       } else {
         NgMap.getGeoLocation().then(function (location) {
           locationToPlace(location);
+          loadDrivers(location);
         });
       }
     });
-    // if (localStorageService.get("arrivalTime") != null)
-    // {
-    //   vm.arrivalTime = localStorageService.get("arrivalTime");
-    //   vm.carInfo = localStorageService.get("carInfo");
-    // }
+
+  }
+
+  function loadDrivers(l) {
+    DriverService.loadDrivers({latitude: l.lat(), longitude: l.lng()})
+      .then(function (response) {
+        // success callback
+        console.log(response);
+        loadMarkers(response.data['drivers']);
+      }, function (response) {
+        //error callback
+        console.log('Error: ', response)
+      });
+  }
+
+  function loadMarkers(drivers) {
+    console.log(drivers);
+    vm.image = {
+      url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+      size: [20, 32],
+      origin: [0,0],
+      anchor: [0, 32]
+    };
+    vm.shape = {
+      coords: [1, 1, 1, 20, 18, 20, 18 , 1],
+      type: 'poly'
+    };
+
+    var driver_pis = [];
+    var i = 0;
+    var d;
+    for(d in drivers) {
+      var dr = drivers[d];
+      driver_pis.push([dr['car_info'], dr['ltd'], dr['lng'], drivers.length - i]);
+      i++;
+    }
+
+    console.log(driver_pis);
+
+    vm.drivers = driver_pis;
+
   }
 
   function updateRouteInfo() {

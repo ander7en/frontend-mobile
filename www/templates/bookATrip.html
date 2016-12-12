@@ -1,12 +1,20 @@
 <div ng-controller="MapCtrl as vm" ng-controller="NotificationCtrl">
 <ion-view title="Book a trip" id="booking"  >
   <ion-content padding="true" class="has-header" scroll="false">
+<style>
+  .firstname {
+    background-color: yellow;
+  }
+
+ </style>
     <div>
       <uib-progressbar class="progress-striped active" value="100" type="success" ng-if="bookingProc === true;"><i>Looking for driver...</i></uib-progressbar>
     </div>
+
     <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
+
     <form id="bookATrip-form2" class="list">
-      <label class="item item-input item-stacked-label" id="bookATrip-input3">
+      <label class="item item-input" id="bookATrip-input3">
         <span class="input-label">Pick-up location</span>
         <input type="text"
                class="form-control"
@@ -19,7 +27,7 @@
                component-restrictions="{country:'ee'}"
                on-place-changed="vm.pickupPlaceChanged()"/>
       </label>
-      <label class="item item-input item-stacked-label" id="bookATrip-input4">
+      <label class="item item-input" id="bookATrip-input4">
         <span class="input-label">Destination location</span>
         <input type="text"
                class="form-control"
@@ -31,7 +39,7 @@
                component-restrictions="{country:'ee'}"
                on-place-changed="vm.destinationPlaceChanged()"/>
       </label>
-      <button id="bookATrip-button1"  style="border-radius:20px 20px 20px 20px;" class="button button-positive  button-block" ng-click="vm.submit()">Request a taxi</button>
+      <button id="bookATrip-button1"  style="border-radius:20px 20px 20px 20px;" class="button button-energized  button-block" ng-click="vm.submit()">Request a taxi</button>
     </form>
 
 
@@ -57,6 +65,13 @@
         origin="{{vm.pickupLocation}}"
         destination="{{vm.destinationLocation}}">
       </directions>
+
+      <marker ng-repeat="driver in vm.drivers"
+              icon="{{vm.image}}"
+              shape="{{vm.shape}}"
+              title="{{driver[0]}}"
+              position="{{driver[1]}}, {{driver[2]}}"
+              z-index="{{driver[3]}}"></marker>
 
     </map>
 
