@@ -1,12 +1,12 @@
 angular.module('app.controllers', [])
 
-.controller('bookATripCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+  .controller('bookATripCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+    function ($scope, $stateParams) {
 
 
-}])
+    }])
 
   .controller('MapCtrl', MapCtrl);
 
@@ -43,7 +43,10 @@ function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingSe
         vm.pickupLocation = OrderingService.unfinishedOrder.origin;
         locationToPlace(vm.pickupLocation);
         vm.destinationLocation = OrderingService.unfinishedOrder.destination;
-        locationToPlace(vm.destinationLocation, true);
+        if (vm.destinationLocation != "noAddress") {
+          locationToPlace(vm.destinationLocation, true);
+        }
+        loadDrivers(vm.pickupLocation);
       } else {
         NgMap.getGeoLocation().then(function (location) {
           locationToPlace(location);
@@ -69,20 +72,20 @@ function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingSe
   function loadMarkers(drivers) {
     console.log(drivers);
     vm.image = {
-      url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-      size: [20, 32],
-      origin: [0,0],
+      url: 'img/taxi-pin.png',
+      size: [32, 32],
+      origin: [0, 0],
       anchor: [0, 32]
     };
     vm.shape = {
-      coords: [1, 1, 1, 20, 18, 20, 18 , 1],
+      coords: [1, 1, 1, 20, 18, 20, 18, 1],
       type: 'poly'
     };
 
     var driver_pis = [];
     var i = 0;
     var d;
-    for(d in drivers) {
+    for (d in drivers) {
       var dr = drivers[d];
       driver_pis.push([dr['car_info'], dr['ltd'], dr['lng'], drivers.length - i]);
       i++;
@@ -146,21 +149,27 @@ function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingSe
     updateRouteInfo();
   }
 
-  function submit() {
-    $rootScope.bookingProc = true;
-    // $scope.$digest();
+  function submit(valid) {
+    if (valid) {
+      $rootScope.bookingProc = true;
+      // $scope.$digest();
 
-    setTimeout(function(){BookingService.book(vm.pickupLocation, vm.destinationLocation)
-      .then(function (response) {
-        // success callback
-        $rootScope.bookingProc = false;
-        console.log(response);
-        return response
-      }, function (response) {
-        //error callback
-        console.log('Error: ', response)
-      }).then(function () {
-      OrderingService.finishCurrentOrder();
-    })}, 5000);
+      setTimeout(function () {
+        BookingService.book(vm.pickupLocation, vm.destinationLocation)
+          .then(function (response) {
+            // success callback
+            $rootScope.bookingProc = false;
+            console.log(response);
+            return response
+          }, function (response) {
+            //error callback
+            console.log('Error: ', response)
+          }).then(function () {
+          OrderingService.finishCurrentOrder();
+        })
+      }, 5000);
+    } else {
+      console.log("Form NOt Valid")
+    }
   }
 }

@@ -13,11 +13,12 @@
 
     <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
 
-    <form id="bookATrip-form2" class="list">
+    <form name="orderForm" id="bookATrip-form2" class="list" ng-submit="vm.submit(orderForm.$valid)" novalidate>
       <label class="item item-input" id="bookATrip-input3">
         <span class="input-label">Pick-up location</span>
         <input type="text"
                class="form-control"
+               name="pickup"
                id="pickupLocation"
                required
                placeholder="Enter pickup location"
@@ -27,19 +28,29 @@
                component-restrictions="{country:'ee'}"
                on-place-changed="vm.pickupPlaceChanged()"/>
       </label>
+      <div ng-show="orderForm.$submitted || orderForm.pickup.$touched">
+        <p ng-show="orderForm.pickup.$error.required">Enter Pickup Location</p>
+      </div>
+
       <label class="item item-input" id="bookATrip-input4">
         <span class="input-label">Destination location</span>
         <input type="text"
                class="form-control"
+               name="destination"
                id="destinationLocation"
                placeholder="Enter destination location"
                size=80
+               required
                places-auto-complete
                ng-model="vm.destinationAddress"
                component-restrictions="{country:'ee'}"
                on-place-changed="vm.destinationPlaceChanged()"/>
       </label>
-      <button id="bookATrip-button1"  style="border-radius:20px 20px 20px 20px;" class="button button-energized  button-block" ng-click="vm.submit()">Request a taxi</button>
+      <div ng-show="orderForm.$submitted || orderForm.destination.$touched">
+        <p ng-show="orderForm.destination.$error.required">Enter Destination Location</p>
+      </div>
+
+      <button id="bookATrip-button1"  style="border-radius:20px 20px 20px 20px;" class="button button-energized  button-block">Request a taxi</button>
     </form>
 
 
