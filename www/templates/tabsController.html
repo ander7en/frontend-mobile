@@ -1,28 +1,29 @@
-<ion-view title="Taxi Me" id="page1">
+<ion-view title="myTaxi" id="page1">
   <style>
     .tabs .tab-item .icon.taxi {
       background-repeat: no-repeat;
       background-position: 50%;
-      height: 100%;
-      background-image: url("http://findicons.com/files/icons/2219/dot_pictograms/256/taxi.png");
+      height: 12 px;
+      background-image: url(img/taxi.png);
       background-size:contain;
     }
 
-    .tabs .tab-item .icon.taxi {
+    .tabs .tab-item .icon.info {
       background-repeat: no-repeat;
       background-position: 50%;
-      height: 100%;
-      background-image: url("http://findicons.com/files/icons/2219/dot_pictograms/256/taxi.png");
-      background-size:contain;
+      height: 8 px;
+      background-image: url(img/info-icon--6.png);
+      background-size:contain
     }
   </style>
   <ion-tabs class="tabs-stable tabs-icon-top" id="tabsController-tabs1">
-    <ion-tab ion-tab title="Request Taxi" icon-on="taxi" icon-off="taxi" href="#/booking/booking" id="tabsController-tab5">
+
+    <ion-tab ion-tab title="Request Taxi" icon-on="taxi" icon-off="taxi" href="" id="tabsController-tab5">
       <ion-nav-view name="tab5"></ion-nav-view>
     </ion-tab>
 
-    <ion-tab title="Cloud Tab" icon="ion-ios-cloud" id="tabsController-tab3">
-      <ion-nav-view name="tab3"></ion-nav-view>
+    <ion-tab title="About Team" icon-on="info" icon-off="info" href="/page3" id="tabsController-tab2">
+      <ion-nav-view name="tab2"></ion-nav-view>
     </ion-tab>
   </ion-tabs>
 </ion-view>

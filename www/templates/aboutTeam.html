@@ -1,0 +1,31 @@
+<div ng-controller="aboutTeamCtrl as vm">
+<ion-view title="About Team" id="page3">
+  <ion-content padding="true" class="has-header">
+
+      <h3> Team 8 Agile Software Development Project</h3>
+
+
+      <div class="container">
+
+
+        <div ng-repeat="data in vm.teamData">
+
+
+          <div class="row" style="margin: 3px">
+            <div class="col-md-4">
+              <img width="220" height="220" src="{{data.avatar_url}}" />
+            </div>
+            <div class="col-md-8">
+              <a href="http://github.com/{{data.username}}">
+                <p>@{{data.username}}</p>
+              </a>
+              <p>{{data.name}}</p>
+              <p>{{data.email}}</p>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+  </ion-content>
+</ion-view>
