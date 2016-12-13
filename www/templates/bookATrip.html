@@ -1,12 +1,7 @@
 <div ng-controller="MapCtrl as vm" ng-controller="NotificationCtrl">
 <ion-view title="Book a trip" id="booking"  >
   <ion-content padding="true" class="has-header" scroll="false">
-<style>
-  .firstname {
-    background-color: yellow;
-  }
 
- </style>
     <div>
       <uib-progressbar class="progress-striped active" value="100" type="success" ng-if="bookingProc === true;"><i>Looking for driver...</i></uib-progressbar>
     </div>
@@ -85,8 +80,6 @@
               z-index="{{driver[3]}}"></marker>
 
     </map>
-
-
   </ion-content>
 </ion-view>
 </div>

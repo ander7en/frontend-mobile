@@ -33,11 +33,12 @@ angular.module('app.controllers', [])
 
   })
 
+
   .controller('MapCtrl', MapCtrl);
 
 
 /* @ngInject */
-function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingService, DriverService) {
+function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingService, DriverService, $ionicPopup) {
 
   var vm = this;
   // Data
@@ -60,11 +61,15 @@ function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingSe
   //////////
   init();
 
-  function init() {
-    NgMap.getMap().then(function (map) {
-      vm.map = map;
-    }).then(function () {
-      if (OrderingService.unfinishedOrderExits) {
+  function showConfirm() {
+
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'You have unfinished order',
+      template: 'Do you want to continue?'
+    });
+
+    confirmPopup.then(function(res) {
+      if(res) {
         vm.pickupLocation = OrderingService.unfinishedOrder.origin;
         locationToPlace(vm.pickupLocation);
         vm.destinationLocation = OrderingService.unfinishedOrder.destination;
@@ -72,6 +77,24 @@ function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingSe
           locationToPlace(vm.destinationLocation, true);
         }
         loadDrivers(vm.pickupLocation);
+      } else {
+        OrderingService.deleteCurrentOrder();
+        NgMap.getGeoLocation().then(function (location) {
+          locationToPlace(location);
+          loadDrivers(location);
+        });
+      }
+    });
+
+  };
+
+  function init() {
+    NgMap.getMap().then(function (map) {
+      vm.map = map;
+    }).then(function () {
+      if (OrderingService.unfinishedOrderExits) {
+        showConfirm();
+
       } else {
         NgMap.getGeoLocation().then(function (location) {
           locationToPlace(location);
