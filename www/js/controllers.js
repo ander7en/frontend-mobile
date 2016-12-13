@@ -1,18 +1,44 @@
 angular.module('app.controllers', [])
 
-.controller('bookATripCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+  .controller('bookATripCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+    function ($scope, $stateParams) {
 
 
-}])
+    }])
+
+  .controller('aboutTeamCtrl', function (githubFactory) {
+    var vm = this;
+
+    var teamMembers = [
+      'demonno',
+      'gorant94',
+      'Gtopuria',
+      'ander7en'
+    ];
+
+    vm.teamData = [];
+    for (var username in teamMembers) {
+      githubFactory.getUser({
+        user: teamMembers[username]
+      }).then(function(_data){
+        console.log(_data);
+        var data = _data.data;
+        vm.teamData.push({'name': data['name'], 'email': data['email'], 'username': data['login'], 'avatar_url': data['avatar_url']})
+      }).catch(function (_data) {
+        //on error
+      });
+    }
+
+  })
+
 
   .controller('MapCtrl', MapCtrl);
 
 
 /* @ngInject */
-function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingService) {
+function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingService, DriverService, $ionicPopup) {
 
   var vm = this;
   // Data
@@ -31,29 +57,92 @@ function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingSe
   vm.pickupPlaceChanged = pickupPlaceChanged;
   vm.updateRouteInfo = updateRouteInfo;
   vm.submit = submit;
+  vm.loadMarkers = loadMarkers;
   //////////
   init();
+
+  function showConfirm() {
+
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'You have unfinished order',
+      template: 'Do you want to continue?'
+    });
+
+    confirmPopup.then(function(res) {
+      if(res) {
+        vm.pickupLocation = OrderingService.unfinishedOrder.origin;
+        locationToPlace(vm.pickupLocation);
+        vm.destinationLocation = OrderingService.unfinishedOrder.destination;
+        if (vm.destinationLocation != "noAddress") {
+          locationToPlace(vm.destinationLocation, true);
+        }
+        loadDrivers(vm.pickupLocation);
+      } else {
+        OrderingService.deleteCurrentOrder();
+        NgMap.getGeoLocation().then(function (location) {
+          locationToPlace(location);
+          loadDrivers(location);
+        });
+      }
+    });
+
+  };
 
   function init() {
     NgMap.getMap().then(function (map) {
       vm.map = map;
     }).then(function () {
       if (OrderingService.unfinishedOrderExits) {
-        vm.pickupLocation = OrderingService.unfinishedOrder.origin;
-        locationToPlace(vm.pickupLocation);
-        vm.destinationLocation = OrderingService.unfinishedOrder.destination;
-        locationToPlace(vm.destinationLocation, true);
+        showConfirm();
+
       } else {
         NgMap.getGeoLocation().then(function (location) {
           locationToPlace(location);
+          loadDrivers(location);
         });
       }
     });
-    // if (localStorageService.get("arrivalTime") != null)
-    // {
-    //   vm.arrivalTime = localStorageService.get("arrivalTime");
-    //   vm.carInfo = localStorageService.get("carInfo");
-    // }
+
+  }
+
+  function loadDrivers(l) {
+    DriverService.loadDrivers({latitude: l.lat(), longitude: l.lng()})
+      .then(function (response) {
+        // success callback
+        console.log(response);
+        loadMarkers(response.data['drivers']);
+      }, function (response) {
+        //error callback
+        console.log('Error: ', response)
+      });
+  }
+
+  function loadMarkers(drivers) {
+    console.log(drivers);
+    vm.image = {
+      url: 'img/taxi-pin.png',
+      size: [32, 32],
+      origin: [0, 0],
+      anchor: [0, 32]
+    };
+    vm.shape = {
+      coords: [1, 1, 1, 20, 18, 20, 18, 1],
+      type: 'poly'
+    };
+
+    var driver_pis = [];
+    var i = 0;
+    var d;
+    for (d in drivers) {
+      var dr = drivers[d];
+      driver_pis.push([dr['car_info'], dr['ltd'], dr['lng'], drivers.length - i]);
+      i++;
+    }
+
+    console.log(driver_pis);
+
+    vm.drivers = driver_pis;
+
   }
 
   function updateRouteInfo() {
@@ -108,21 +197,27 @@ function MapCtrl($rootScope, $scope, NgMap, $timeout, BookingService, OrderingSe
     updateRouteInfo();
   }
 
-  function submit() {
-    $rootScope.bookingProc = true;
-    // $scope.$digest();
+  function submit(valid) {
+    if (valid) {
+      $rootScope.bookingProc = true;
+      // $scope.$digest();
 
-    setTimeout(function(){BookingService.book(vm.pickupLocation, vm.destinationLocation)
-      .then(function (response) {
-        // success callback
-        $rootScope.bookingProc = false;
-        console.log(response);
-        return response
-      }, function (response) {
-        //error callback
-        console.log('Error: ', response)
-      }).then(function () {
-      OrderingService.finishCurrentOrder();
-    })}, 5000);
+      setTimeout(function () {
+        BookingService.book(vm.pickupLocation, vm.destinationLocation)
+          .then(function (response) {
+            // success callback
+            $rootScope.bookingProc = false;
+            console.log(response);
+            return response
+          }, function (response) {
+            //error callback
+            console.log('Error: ', response)
+          }).then(function () {
+          OrderingService.finishCurrentOrder();
+        })
+      }, 5000);
+    } else {
+      console.log("Form NOt Valid")
+    }
   }
 }

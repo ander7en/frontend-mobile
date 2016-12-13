@@ -7,11 +7,11 @@ angular.module('app.routes', [])
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
-    
-  
+
+
 
       .state('tabsController', {
-    url: '/booking',
+    url: '',
     templateUrl: 'templates/tabsController.html',
     abstract:true
   })
@@ -26,8 +26,18 @@ angular.module('app.routes', [])
     }
   })
 
-$urlRouterProvider.otherwise('/booking/booking')
+    .state('tabsController.aboutTeam', {
+      url: '/page3',
+      views: {
+        'tab2': {
+          templateUrl: 'templates/aboutTeam.html',
+          controller: 'aboutTeamCtrl'
+        }
+      }
+    })
 
-  
+$urlRouterProvider.otherwise('booking')
+
+
 
 });

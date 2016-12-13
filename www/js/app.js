@@ -5,14 +5,17 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives','app.services','ngMap', 'LocalStorageModule', 'ui.bootstrap'])
+angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives','app.services','ngMap', 'LocalStorageModule', 'ui.bootstrap', 'jtt_github'])
 
 .config(function($ionicConfigProvider, $sceDelegateProvider){
 
 
   $sceDelegateProvider.resourceUrlWhitelist([ 'self','*://www.youtube.com/**', '*://player.vimeo.com/video/**']);
+  $ionicConfigProvider.tabs.style('standard');
+  $ionicConfigProvider.tabs.position('bottom');
 
 })
+
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
