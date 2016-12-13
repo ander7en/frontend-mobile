@@ -11,9 +11,10 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
 
 
   $sceDelegateProvider.resourceUrlWhitelist([ 'self','*://www.youtube.com/**', '*://player.vimeo.com/video/**']);
+  $ionicConfigProvider.tabs.style('standard');
+  $ionicConfigProvider.tabs.position('bottom');
 
 })
-
 
 
 .run(function($ionicPlatform) {
